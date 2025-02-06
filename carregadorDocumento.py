@@ -16,6 +16,10 @@ class CarregadorDocumento:
     SIGLAS = (
         'BNDES',
         'PEAC',
+        'SCR',
+        '- SCR',
+        'CNAE',
+        '(CNAE'
     )
 
     NUMEROS_ROMANOS = [
@@ -34,7 +38,7 @@ class CarregadorDocumento:
 
 
     def __linhaRegulamentoDeveSerIgnorada(self, linha: str) -> bool:
-            if not linha.startswith(self.SIGLAS) and re.fullmatch(r"[A-ZÀ-ÖØ-Ý\s\d\W]+", linha):  # Verifica se a linha é toda maiúscula 
+            if not linha.startswith(self.SIGLAS) and re.fullmatch(r"(?=.*[A-ZÀ-ÖØ-Ý])[A-ZÀ-ÖØ-Ý\s\d\W]+", linha):  # Verifica se a linha é toda maiúscula 
                 return True
 
             if linha.startswith(self.LINHAS_IGNORADAS):

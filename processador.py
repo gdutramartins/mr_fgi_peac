@@ -49,11 +49,15 @@ class Processador:
         Agora, responda à seguinte pergunta com base no contexto fornecido:  
         **Pergunta:** {pergunta}
         """
-        
+        print("Pergunta para LLM:")
+        print(prompt)
+        print("-----------------------------------------")
+
         resposta = self.__llm(prompt)
         
         print("Resposta da LLM:\n", resposta)
-
+        print("==========================================")
+        
         return resposta
 
 

@@ -12,6 +12,7 @@ class Indexador:
     __INDEX_NORMAS_PATH = "faiss_normas_index"
     __INDEX_DICIONARIO = "faiss_dicionario_index"
     __ARQUIVO_DICIONARIO = "resources/dicionario-regulamento.json"
+    __ARQUIVO_SINONIMOS = "resources/sinonimos.json"
 
     MODEL_EMBEDDING = 'amazon.titan-embed-text-v2:0'
 
@@ -70,11 +71,19 @@ class Indexador:
     
     def __montarchunksDicionario(self, texto: str) -> Dict[str, str]:
         items: Dict[str, str] = dict()
-        lines = texto.split('\n')
+
+        # Tratar casos onde a organização do texto quebra o algoritma de quebrar pares de chave e descrição
+        textoAjustado = texto
+        textoAjustado = textoAjustado.replace("(Peac-\nFGI):", "(Peac-FGI):")
+        textoAjustado = textoAjustado.replace("Crédito Solidário\nRS):", "Crédito Solidário RS):")
+        textoAjustado = textoAjustado.replace("Programas de Garantia do\nPEAC: Programa Emergencial de Acesso", "Programas de Garantia do PEAC- Programa Emergencial de Acesso")
+        textoAjustado = textoAjustado.replace("Outorga de Garantia, que será: igual ao Valor", "Outorga de Garantia, que será igual ao Valor")
+
+        lines = textoAjustado.split('\n')
         current_key = None
     
         for line in lines:
-            match = re.match(r'^(.*?):\s*(.*)', line)
+            match = re.match(r'([^:]+):\s*(.*)', line)
             if match:
                 if current_key:
                     items[current_key] = current_value.strip()
@@ -124,13 +133,21 @@ class Indexador:
 
         # Definir o número de chunks e o limite de similaridade
         TOP_K = 3
-        SIMILARITY_THRESHOLD = 0.85  # Ajuste conforme necessário
+        SIMILARITY_THRESHOLD = 0.70  # Ajuste conforme necessário
 
         # Realizar busca com pontuações
         results = db_index.similarity_search_with_score(textoConsulta, k=TOP_K)
 
+        for doc, score in results:
+            print(doc, score)
+            print("+++++++++++++++++++++++++")
+
         # Filtrar por similaridade mínima
         filtered_results = [(doc, score) for doc, score in results if score >= SIMILARITY_THRESHOLD]
+        if not filtered_results:
+        # Encontrar o item com o maior score em results
+            item_maior_score = [max(results, key=lambda x: x[1])]  # x[1] é o campo score
+
 
         # Exibir os resultados
         for idx, (doc, score) in enumerate(filtered_results):
@@ -168,12 +185,25 @@ class Indexador:
     
         
     def buscarTermosDicionario(self, pergunta: str) -> Dict[str, str]:                
+        termosRelevantes = dict()
         with open(self.__ARQUIVO_DICIONARIO, "r", encoding="utf-8") as file:
             itensDicionario = json.load(file)
         
+        with open(self.__ARQUIVO_SINONIMOS, "r", encoding="utf-8") as file:
+            termosComSinonimos: Dict[str,str] = json.load(file)
+
+
         perguntaTratada = pergunta.lower()
         
-        termosRelevantes = {termo: definicao for termo, definicao in itensDicionario.items() if termo.lower() in perguntaTratada}
+        for termo, definicao in itensDicionario.items():
+            if termo.lower() in perguntaTratada:
+                termosRelevantes[termo] = definicao
+            else:  
+                sinonimos = [s.strip() for s in termosComSinonimos[termo].split(",")]
+                for sin in sinonimos:
+                    if sin.lower() in perguntaTratada:
+                        termosRelevantes[termo] = definicao
+                        break
 
         return termosRelevantes
 

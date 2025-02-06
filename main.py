@@ -7,9 +7,9 @@ def main():
     carregador = CarregadorDocumento();
     indexador = Indexador()
     
-    textoRegulamento, textoDicionario = carregador.carregarArquivoNormas()
-    indexador.indexarRegulamento(textoRegulamento);
-    indexador.indexarDicionario(textoDicionario)
+    #textoRegulamento, textoDicionario = carregador.carregarArquivoNormas()
+    #indexador.indexarRegulamento(textoRegulamento);
+    #indexador.indexarDicionario(textoDicionario)
     #regs = indexador.buscarRegulamentosPorSimliaridade("Limite de contratação de operações por agente financeiro")
     #for idx, r in enumerate(regs):
      #       print(f"Texto: {r}\n{'-'*50}")
