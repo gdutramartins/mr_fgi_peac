@@ -1,7 +1,7 @@
 
 from typing import Dict, List
 from langchain_aws import BedrockLLM
-from indexador import Indexador
+from indexadorNormasPeac import IndexadorNormasPeac
 
 
 class Processador:
@@ -22,7 +22,7 @@ class Processador:
             "top_p": 0.9}
         )
 
-        self.__indexador = Indexador()
+        self.__indexador = IndexadorNormasPeac()
 
 
     

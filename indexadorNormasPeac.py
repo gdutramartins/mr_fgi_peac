@@ -8,7 +8,7 @@ from langchain_community.vectorstores import FAISS
 from langchain.indexes import VectorstoreIndexCreator
 from langchain_aws import BedrockEmbeddings
 
-class Indexador:
+class IndexadorNormasPeac:
     __INDEX_NORMAS_PATH = "faiss_normas_index"
     __INDEX_DICIONARIO = "faiss_dicionario_index"
     __ARQUIVO_DICIONARIO = "resources/dicionario-regulamento.json"
