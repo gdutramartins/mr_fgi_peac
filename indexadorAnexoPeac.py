@@ -17,6 +17,57 @@ class IndexadorAnexoPeac:
     def __init__(self):
         self.geraLogArquivo = True
 
+    def __corrigeTitulos(self, texto: str) -> str:
+        """
+        Corrige os titulos do documento, o inicio do documento tem o formato X.X.X.X e depois do item 9.2 foi retirado esse ponto após a numeração
+
+        Args:
+            texto (str): texto a ser ajustado
+
+        Returns:
+            str: texto ajustado
+
+        Raises:
+            Não lança exceção
+        """
+        textoAjustado = texto.replace("ver a seção\n4.6.", "ver a seção 4.6.")
+        textoAjustado = textoAjustado.replace("9.2.1 Encaminhamento do Informe de Amortização Antecipada", "9.2.1. Encaminhamento do Informe de Amortização Antecipada")
+        textoAjustado = textoAjustado.replace("9.2.2 Validação do Informe de Amortização Antecipada", "9.2.2. Validação do Informe de Amortização Antecipada")
+        textoAjustado = textoAjustado.replace("9.2.2.1 Validação de Formato", "9.2.2.1. Validação de Formato")
+        textoAjustado = textoAjustado.replace("9.2.2.2 Validação de Conteúdo", "9.2.2.2. Validação de Conteúdo")
+        textoAjustado = textoAjustado.replace("9.2.3 Processamento dos Informes de Amortização Antecipada", "9.2.3. Processamento dos Informes de Amortização Antecipada")
+        textoAjustado = textoAjustado.replace("9.2.4 Retorno da Crítica", "9.2.4. Retorno da Crítica")
+        textoAjustado = textoAjustado.replace("10 SOLICITAÇÃO DE HONRA DE GARANTIA", "10. SOLICITAÇÃO DE HONRA DE GARANTIA")
+        textoAjustado = textoAjustado.replace("10.1 Encaminhamento do Lote Mensal de Solicitações de Honra", "10.1. Encaminhamento do Lote Mensal de Solicitações de Honra")
+        textoAjustado = textoAjustado.replace("10.2 Validação da Solicitação de Honra", "10.2. Validação da Solicitação de Honra")
+        textoAjustado = textoAjustado.replace("10.2.1 Validação de Formato", "10.2.1. Validação de Formato")
+        textoAjustado = textoAjustado.replace("10.2.2 Validação de Conteúdo", "10.2.2. Validação de Conteúdo")
+        textoAjustado = textoAjustado.replace("10.2.3 Validação da Cobertura de Inadimplência", "10.2.3. Validação da Cobertura de Inadimplência")
+        textoAjustado = textoAjustado.replace("10.2.4 Processamento das Solicitações de Honra", "10.2.4. Processamento das Solicitações de Honra")
+        textoAjustado = textoAjustado.replace("10.2.5 Retorno da Crítica", "10.2.5. Retorno da Crítica")
+        textoAjustado = textoAjustado.replace("10.3 Substituição de Lote Mensal", "10.3. Substituição de Lote Mensal")
+        textoAjustado = textoAjustado.replace("10.4 Cancelamento de Lote Mensal", "10.4. Cancelamento de Lote Mensal")
+        textoAjustado = textoAjustado.replace("10.5 Processamento da Solicitação de Honra", "10.5. Processamento da Solicitação de Honra")
+        textoAjustado = textoAjustado.replace("11 RECUPERAÇÃO DE CRÉDITO", "11. RECUPERAÇÃO DE CRÉDITO")
+        textoAjustado = textoAjustado.replace("11.1 Aplicabilidade", "11.1. Aplicabilidade")
+        textoAjustado = textoAjustado.replace("11.2 Encaminhamento do Informe de Recuperação de Crédito", "11.2. Encaminhamento do Informe de Recuperação de Crédito")
+        textoAjustado = textoAjustado.replace("11.3 Validação do Informe de Recuperação de Crédito", "11.3. Validação do Informe de Recuperação de Crédito")
+        textoAjustado = textoAjustado.replace("11.3.1 Validação de Formato", "11.3.1. Validação de Formato")
+        textoAjustado = textoAjustado.replace("11.3.2 Validação de Conteúdo", "11.3.2. Validação de Conteúdo")
+        textoAjustado = textoAjustado.replace("11.3.3 Processamento dos Informes de Recuperação de Crédito", "11.3.3. Processamento dos Informes de Recuperação de Crédito")
+        textoAjustado = textoAjustado.replace("11.4 Retorno da Crítica", "11.4. Retorno da Crítica")
+        textoAjustado = textoAjustado.replace("11.5 Retificação e Cancelamento de Informes Enviados", "11.5. Retificação e Cancelamento de Informes Enviados")
+        textoAjustado = textoAjustado.replace("12 DEVOLUÇÃO DO VALOR HONRADO A RECUPERAR PELO AGENTE", "12. DEVOLUÇÃO DO VALOR HONRADO A RECUPERAR PELO AGENTE")
+        textoAjustado = textoAjustado.replace("13 PRESTAÇÃO DE INFORMAÇÕES PELO AGENTE FINANCEIRO", "13. PRESTAÇÃO DE INFORMAÇÕES PELO AGENTE FINANCEIRO")
+        textoAjustado = textoAjustado.replace("13.1 Posição de Carteira em Recuperação de Crédito", "13.1. Posição de Carteira em Recuperação de Crédito")
+        textoAjustado = textoAjustado.replace("13.2 Informe de Classificação de Risco Atualizada", "13.2. Informe de Classificação de Risco Atualizada")
+        textoAjustado = textoAjustado.replace("13.3 Informe da Inclusão, Troca de IPOC, Alteração de Dados Retroativos ou", "13.3. Informe da Inclusão, Troca de IPOC, Alteração de Dados Retroativos ou")
+        textoAjustado = textoAjustado.replace("14 RENÚNCIA DE PARTE DO VALOR DA COBERTURA MÁXIMA DE", "14. RENÚNCIA DE PARTE DO VALOR DA COBERTURA MÁXIMA DE")
+        textoAjustado = textoAjustado.replace("15 DEMAIS ORIENTAÇÕES", "15. DEMAIS ORIENTAÇÕES")
+        textoAjustado = textoAjustado.replace("16 OBSERVAÇÕES", "16. OBSERVAÇÕES")
+
+        return textoAjustado
+
     def __montarchunks(self, texto: str) -> List[Tuple[str,str]]:
         """
         Separa os chunks da regras do regulamento, utilização específica para o regulamento.
@@ -33,9 +84,7 @@ class IndexadorAnexoPeac:
         """
         print("====> Montando chunks anexo ")
 
-        textoAjustado = texto
-        textoAjustado = textoAjustado.replace("ver a seção\n4.6.", "ver a seção 4.6.")
-        textoAjustado = textoAjustado.replace("10 SOLICITAÇÃO DE HONRA DE GARANTIA", "10. SOLICITAÇÃO DE HONRA DE GARANTIA")
+        textoAjustado = self.__corrigeTitulos(texto)            
 
         pattern = re.compile(r'(?m)^(\d{1,2}(?:\.\d+){0,3})\.(?=\s)', re.MULTILINE)
     

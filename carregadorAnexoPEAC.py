@@ -44,7 +44,7 @@ class CarregadorAnexoPeac(CarregadorDocumento):
     
     @override
     def __getPathArquivoDocumento(self) -> str:
-        return 'pdf/anexo-procedimentos-peac.pdf'
+        return 'pdf/anexo-2-peac.pdf'
 
     @override
     def __verificaLinhaDeveSerIgnorada(self, linha: str) -> bool:
