@@ -21,9 +21,8 @@ class CarregadorDocumento:
     def _getPathArquivoDocumento(self) -> str:
         pass
     
-    @abstractmethod
     def _isLogOn(self) -> bool:
-        pass
+        return True
     
     @abstractmethod
     def _getNomeArquivoLogRegulamento(self) -> str:
@@ -61,14 +60,14 @@ class CarregadorDocumento:
             return
                 
         print("====> gerando arquivos log ")
-        print(f"====> Log Regulamentos -> {self.__getNomeArquivoLogRegulamento}")        
-        with open(self.__getNomeArquivoLogRegulamento(), "w", encoding="utf-8") as arquivo:
+        print(f"====> Log Regulamentos -> {self._getNomeArquivoLogRegulamento()}")        
+        with open(self._getNomeArquivoLogRegulamento(), "w", encoding="utf-8") as arquivo:
             for linha in linhasRegulamento:
                 arquivo.write(linha + "\n")
         if (not linhasDicionario or len(linhasDicionario) == 0):
             print("Dicionário não gerado - sem linhas para processar")
             return 
-        with open(self.__getNomeArquivoLogDicionario(), "w", encoding="utf-8") as arquivoDicionario:
+        with open(self._getNomeArquivoLogDicionario(), "w", encoding="utf-8") as arquivoDicionario:
             for linha in linhasDicionario:
                 arquivoDicionario.write(linha + "\n")
 
