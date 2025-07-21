@@ -10,7 +10,7 @@ from carregadorDocumento import CarregadorDocumento
 
 
 class CarregadorAnexoPeac(CarregadorDocumento):
-    __LINHAS_IGNORADAS = (
+    _LINHAS_IGNORADAS = (
         'Classificação: Documento Ostensivo', 
         'Unidade Gestora: ADIG'
     )
@@ -39,16 +39,24 @@ class CarregadorAnexoPeac(CarregadorDocumento):
         super().__init__()
 
     @override
-    def __getLinhasIgnoradas(self):
-        return self.__LINHAS_IGNORADAS
+    def _getLinhasIgnoradas(self):
+        return self._LINHAS_IGNORADAS
     
     @override
-    def __getPathArquivoDocumento(self) -> str:
+    def _getPathArquivoDocumento(self) -> str:
         return 'pdf/anexo-2-peac.pdf'
+    
+    @override
+    def _getNomeArquivoLogRegulamento(self):
+        return "logs/anexo-peac.log"
+    
+    @override
+    def _getNomeArquivoLogDicionario(self):
+        return ""
 
     @override
-    def __verificaLinhaDeveSerIgnorada(self, linha: str) -> bool:
-            if linha.startswith(self.__getLinhasIgnoradas()):
+    def _verificaLinhaDeveSerIgnorada(self, linha: str) -> bool:
+            if linha.startswith(self._getLinhasIgnoradas()):
                 return True
             
             return False
@@ -58,10 +66,10 @@ class CarregadorAnexoPeac(CarregadorDocumento):
         linhasExtraidas = []
         dicionarioOn: bool = False
 
-        print("==> Carregando Anexo")
+        print(f"==> Carregando Anexo - {self._getPathArquivoDocumento()}")
 
         ignorarInicioDocumento = True
-        with pdfplumber.open(self.__getPathArquivoDocumento()) as pdf:
+        with pdfplumber.open(self._getPathArquivoDocumento()) as pdf:
             for pagina in pdf.pages:
                 linhas = pagina.extract_text(x_tolerance=2, y_tolerance=2).split("\n"); 
                 if linhas[-1].strip().isdigit():  # Verifica se a última linha é um número (número da página)
@@ -71,18 +79,14 @@ class CarregadorAnexoPeac(CarregadorDocumento):
                         if "14. DEMAIS ORIENTAÇÕES" in li:
                             ignorarInicioDocumento = False
                         continue
-                    if self.__verificaLinhaDeveSerIgnorada(li):
+                    if self._verificaLinhaDeveSerIgnorada(li):
                         continue 
 
                     linhasExtraidas.append(li) 
         textoFinal = "\n".join(linhasExtraidas)
 
-        if self.geraLogArquivo:
-            print("====> gerando arquivos log do anexo-peac ")
-            with open("logs/anexo-peac.log", "w", encoding="utf-8") as arquivo:
-                for linha in linhasExtraidas:
-                    arquivo.write(linha + "\n")             
-
+        self._gerarLogCarga(linhasExtraidas, [])
+        
         return textoFinal, ""
 
 

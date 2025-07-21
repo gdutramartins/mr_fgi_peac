@@ -10,7 +10,7 @@ from carregadorDocumento import CarregadorDocumento
 
 
 class CarregadorNormasPeac(CarregadorDocumento):
-    __LINHAS_IGNORADAS = (
+    _LINHAS_IGNORADAS = (
         'Classificação: Documento Ostensivo', 
         'Unidade Gestora: ADIG',
         'definições, utilizadas no singular ou plural:'
@@ -40,15 +40,27 @@ class CarregadorNormasPeac(CarregadorDocumento):
         super().__init__()
 
     @override
-    def __getLinhasIgnoradas(self):
-        return self.__LINHAS_IGNORADAS
+    def _getLinhasIgnoradas(self):
+        return self._LINHAS_IGNORADAS
+  
+    @override
+    def _getPathArquivoDocumento(self) -> str:
+        return 'pdf/regulamento-peac.pdf'
 
     @override
-    def __verificaLinhaDeveSerIgnorada(self, linha: str) -> bool:
+    def _getNomeArquivoLogRegulamento(self):
+        return "logs/regulamento-peac.log"
+    
+    @override
+    def _getNomeArquivoLogDicionario(self):
+        return "logs/regulamento-peac-dicionario.log"
+    
+    @override
+    def _verificaLinhaDeveSerIgnorada(self, linha: str) -> bool:
             if not linha.startswith(self.SIGLAS) and re.fullmatch(r"(?=.*[A-ZÀ-ÖØ-Ý])[A-ZÀ-ÖØ-Ý\s\d\W]+", linha):  # Verifica se a linha é toda maiúscula 
                 return True
 
-            if linha.startswith(self.__getLinhasIgnoradas()):
+            if linha.startswith(self._getLinhasIgnoradas()):
                 return True
             # Somente se a linha for exatamente um número romano (geralmente lixo)
             if linha.upper() in self.NUMEROS_ROMANOS:
@@ -57,18 +69,14 @@ class CarregadorNormasPeac(CarregadorDocumento):
             return False
 
     @override
-    def __getPathArquivoDocumento(self) -> str:
-        return 'pdf/regulamento-peac.pdf'
-
-    @override
     def carregarArquivo(self) -> tuple[str,str]:
         linhasRegulamento = []
         linhasDicionario = []
         dicionarioOn: bool = False
 
-        print("==> Carregando regulamento")
+        print(f"==> Carregando regulamento ({self._getPathArquivoDocumento()})")
 
-        with pdfplumber.open(self.__getPathArquivoDocumento()) as pdf:
+        with pdfplumber.open(self._getPathArquivoDocumento()) as pdf:
             for pagina in pdf.pages:
                 linhas = pagina.extract_text(x_tolerance=2, y_tolerance=2).split("\n"); # divide em linhas
                 if linhas[-1].strip().isdigit():  # Verifica se a última linha é um número (número da página)
@@ -78,7 +86,7 @@ class CarregadorNormasPeac(CarregadorDocumento):
                         dicionarioOn = True              
                     elif li.startswith("CAPÍTULO II – DA HABILITAÇÃO DO AGENTE FINANCEIRO"): 
                         dicionarioOn = False
-                    elif self.__verificaLinhaDeveSerIgnorada(li):
+                    elif self._verificaLinhaDeveSerIgnorada(li):
                         continue
                     elif dicionarioOn:
                         linhasDicionario.append(li)
@@ -87,14 +95,7 @@ class CarregadorNormasPeac(CarregadorDocumento):
         textoRegulamento = "\n".join(linhasRegulamento)
         textoDicionario = "\n".join(linhasDicionario)
 
-        if self.geraLogArquivo:
-            print("====> gerando arquivos log ")
-            with open("logs/regulamento-peac.log", "w", encoding="utf-8") as arquivo:
-                for linha in linhasRegulamento:
-                    arquivo.write(linha + "\n") 
-            with open("logs/regulamento-peac-dicionario.log", "w", encoding="utf-8") as arquivoDicionario:
-                for linha in linhasDicionario:
-                    arquivoDicionario.write(linha + "\n") 
+        self._gerarLogCarga(linhasRegulamento, linhasDicionario)
 
         return textoRegulamento, textoDicionario
 

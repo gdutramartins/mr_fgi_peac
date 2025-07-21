@@ -7,14 +7,14 @@ from carregadorAnexoPEAC import CarregadorAnexoPeac
 
 
 def main():
-    #carregadorNormas = CarregadorNormasPeac();
+    carregadorNormas = CarregadorNormasPeac();
     carregadorAnexo = CarregadorAnexoPeac()
-    indexadorNormas = IndexadorNormasPeac()
-    indexadorAnexo = IndexadorAnexoPeac()
+    #indexadorNormas = IndexadorNormasPeac()
+    #indexadorAnexo = IndexadorAnexoPeac()
     
-    #textoRegulamento, textoDicionario = carregadorNormas.carregarArquivo()
+    textoRegulamento, textoDicionario = carregadorNormas.carregarArquivo()
     textoAnexo,_ = carregadorAnexo.carregarArquivo()
-    indexadorAnexo.indexarAnexo(textoAnexo)
+    #indexadorAnexo.indexarAnexo(textoAnexo)
     #indexador.indexarRegulamento(textoRegulamento);
     #indexador.indexarDicionario(textoDicionario)
     #regs = indexador.buscarRegulamentosPorSimliaridade("Limite de contratação de operações por agente financeiro")

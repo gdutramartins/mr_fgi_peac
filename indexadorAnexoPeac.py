@@ -8,7 +8,7 @@ from langchain_community.vectorstores import FAISS
 from langchain.indexes import VectorstoreIndexCreator
 from langchain_aws import BedrockEmbeddings
 
-class IndexadorAnexoPeac:
+class IndexadorAnexoPeac: 
     __INDEX_ANEXO_PATH = "faiss_anexo_index"
     
 
